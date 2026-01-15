@@ -1,0 +1,678 @@
+:root {
+    --primary-bg: #f0fdf4;
+    /* Very light green/white */
+    --primary-dark: #064e3b;
+    /* Deep Green */
+    --accent: #10b981;
+    /* Bright Emerald */
+    --gold: #d4af37;
+    /* Gold for highlights */
+    --text-main: #064e3b;
+    --text-light: #ffffff;
+    --card-bg: #ffffff;
+    --danger: #ef4444;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-main);
+    background-color: var(--primary-dark);
+    height: 100vh;
+    overflow-y: auto;
+    /* Allow scrolling if content is too tall */
+    /* TV Optimization */
+    -webkit-font-smoothing: antialiased;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* Default background fallback */
+    background-image: none;
+}
+
+/* Layout */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* Allow growth */
+    background-color: rgba(240, 253, 244, 0.9);
+    /* High opacity default for readability, adjusted via JS */
+    transition: background-color 0.3s;
+}
+
+.app-container.has-bg {
+    background-color: rgba(6, 78, 59, 0.85);
+    /* Darker overlay when image is present for contrast */
+}
+
+/* When BG is active, text colors might need shifting if we went transparent, 
+   but we are using a heavy overlay so standard colors should remain readable.
+   Let's keep the design consistent but ensure the overlay handles contrast.
+*/
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    /* Reduced padding */
+    gap: 1rem;
+    /* Reduced gap */
+    min-height: calc(100vh - 80px);
+    /* Leave space for ticker */
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--primary-dark);
+    color: var(--text-light);
+    padding: 0.5rem 1.25rem;
+    /* Further reduced padding */
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.mosque-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mosque-logo {
+    height: 50px;
+    /* fits nicely within compact header */
+    width: auto;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.mosque-logo.hidden {
+    display: none;
+}
+
+.mosque-text h1 {
+    font-size: 1.5rem;
+    /* Reduced */
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.location-subtitle {
+    opacity: 0.8;
+    font-size: 0.9rem;
+    /* Further reduced */
+    margin-top: 0.1rem;
+}
+
+.time-display {
+    text-align: right;
+}
+
+.clock {
+    font-size: 2rem;
+    /* Further reduced */
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.date-sub {
+    font-size: 0.9rem;
+    /* Further reduced */
+    opacity: 0.9;
+    margin-top: 0.2rem;
+}
+
+.date-hijri {
+    font-size: 1rem;
+    /* Slightly smaller but visible */
+    color: var(--accent);
+    margin-top: 0.15rem;
+    font-weight: 600;
+    /* Bolder for visibility */
+}
+
+/* Prayer Section */
+.prayer-section {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    /* Reduced width from 350px */
+    gap: 1.5rem;
+    flex: 1;
+}
+
+/* Next Prayer Card - Highlighted */
+.prayer-card {
+    background: var(--primary-dark);
+    color: var(--text-light);
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.prayer-card .label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.prayer-card h2 {
+    font-size: 3.5rem;
+    margin: 1rem 0;
+    font-weight: 700;
+}
+
+.countdown {
+    font-size: 4rem;
+    font-weight: 300;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+}
+
+/* Prayer List grid - 3 items top, 2 items bottom */
+.prayer-list {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+/* Prayer Items (Restyled) */
+.prayer-item {
+    background: transparent;
+    border-radius: 0;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    box-shadow: none;
+    border: none;
+    transition: transform 0.2s;
+    /* Grid spanning logic is preserved */
+}
+
+/* Row 1: 3 items (span 2 each) */
+.prayer-item:nth-child(1),
+.prayer-item:nth-child(2),
+.prayer-item:nth-child(3) {
+    grid-column: span 2;
+}
+
+/* Row 2: 2 items (span 3 each) */
+.prayer-item:nth-child(4),
+.prayer-item:nth-child(5) {
+    grid-column: span 3;
+}
+
+.prayer-item.active,
+.prayer-item.next-prayer {
+    transform: scale(1.05);
+    background: transparent;
+    /* Remove full tab highlight */
+    box-shadow: none;
+    /* Remove shadow */
+}
+
+/* Only highlight the Circle */
+.prayer-item.next-prayer .prayer-time-circle {
+    background: var(--primary-dark);
+    color: #ffffff;
+    border-color: var(--primary-dark);
+    /* Solid border matching bg, or white? Let's match bg to make it a solid circle */
+    box-shadow: 0 4px 10px rgba(6, 78, 59, 0.3);
+}
+
+/* Ensure the time text inside is white */
+.prayer-item.next-prayer .time-main,
+.prayer-item.next-prayer .time-suffix {
+    color: #ffffff;
+}
+
+/* Keep other elements (Icon/Name) standard colors */
+.prayer-item.next-prayer .prayer-visuals,
+.prayer-item.next-prayer .prayer-name,
+.prayer-item.next-prayer .mosque-icon-svg {
+    color: var(--primary-dark);
+    fill: var(--primary-dark);
+    text-shadow: none;
+}
+
+.prayer-visuals {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-dark);
+}
+
+.mosque-icon-svg {
+    width: 60px;
+    height: 60px;
+    margin-bottom: -10px;
+    fill: var(--primary-dark);
+    color: var(--primary-dark);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.prayer-name {
+    font-family: serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    text-transform: capitalize;
+    margin-top: 0.25rem;
+    text-shadow: none;
+    /* Remove shadow for cleaner look */
+}
+
+.prayer-time-circle {
+    width: 110px;
+    height: 110px;
+    border: 3px dashed var(--primary-dark);
+    /* Thicker for visibility */
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.5);
+    /* Lighter bg for contrast */
+    color: var(--primary-dark);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: 700;
+}
+
+.time-main {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1;
+    font-family: sans-serif;
+    /* Keep numbers sans-serif for readability or match serif? */
+}
+
+.time-suffix {
+    font-size: 1rem;
+    text-transform: lowercase;
+    opacity: 0.9;
+    margin-top: -0.2rem;
+}
+
+/* Bottom Grid (Jummah, Hadith & QR) */
+.bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    /* Equal 3 columns */
+    gap: 1.5rem;
+    height: 180px;
+    flex-shrink: 0;
+    /* Ensure this section doesn't collapse */
+}
+
+.jummah-card,
+.hadith-card,
+.qr-card {
+    background: var(--primary-dark);
+    /* For Jummah, but wait, others are white? Check. */
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Specific Card Backgrounds */
+.jummah-card {
+    background: var(--primary-dark);
+    color: var(--text-light);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hadith-card,
+.qr-card {
+    background: var(--card-bg);
+    color: var(--text-main);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Hadith Card Specifics */
+.hadith-card h3 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    opacity: 0.9;
+}
+
+.hadith-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#hadith-text {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--text-main);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    /* Limit lines to prevent overflow */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+#hadith-source {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-align: right;
+    font-weight: 500;
+}
+
+
+
+.jummah-card::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+}
+
+.jummah-card h3 {
+    opacity: 0.8;
+    margin-bottom: 0.25rem;
+    /* Reduced bottom margin */
+    font-weight: 400;
+}
+
+.jummah-date-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+}
+
+.jummah-time {
+    font-size: 3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+.jummah-label {
+    font-size: 1rem;
+    opacity: 0.7;
+    font-weight: 400;
+}
+
+.khatib-info {
+    margin-top: 0.5rem;
+    font-size: 1.25rem;
+}
+
+.qr-card {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 1rem;
+    /* Reduced padding to fit two */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.qr-card h3 {
+    font-size: 1.25rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.25rem;
+}
+
+.qr-container {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.qr-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.qr-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+.qr-placeholder {
+    width: 80px;
+    height: 80px;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 8px;
+}
+
+.qr-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+/* Ticker Footer */
+.announcement-bar {
+    height: 80px;
+    background: var(--primary-dark);
+    color: white;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    border-top: 4px solid var(--accent);
+}
+
+.ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ticker {
+    display: inline-block;
+    padding-left: 100%;
+    animation: ticker 30s linear infinite;
+}
+
+.ticker__item {
+    display: inline-block;
+    padding: 0 4rem;
+    font-size: 1.75rem;
+    font-weight: 300;
+}
+
+@keyframes ticker {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(-100%, 0, 0);
+    }
+}
+
+/* Overlays */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
+    transition: opacity 0.3s ease;
+}
+
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Silent Mode */
+.silent-mode {
+    background: rgba(0, 0, 0, 0.95);
+    color: white;
+}
+
+.silent-content {
+    text-align: center;
+    animation: pulse 2s infinite;
+}
+
+.silent-icon {
+    font-size: 8rem;
+    margin-bottom: 2rem;
+}
+
+.silent-content h1 {
+    font-size: 5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.silent-content p {
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Admin Panel */
+.admin-trigger {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.3;
+    /* Increased from 0.1 for visibility */
+    cursor: pointer;
+    z-index: 2000;
+    /* Ensure it's above everything including footer/overlays */
+    transition: opacity 0.3s;
+}
+
+.admin-trigger:hover {
+    opacity: 1;
+}
+
+.admin-panel {
+    background: rgba(6, 78, 59, 0.9);
+}
+
+.admin-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 500px;
+    max-height: 85vh;
+    /* Prevent it from being taller than screen */
+    overflow-y: auto;
+    /* Enable scrolling */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    /* Ensure z-index works if needed */
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+}
+
+.control-group {
+    margin-bottom: 1.5rem;
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    font-family: inherit;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary-dark);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.number-stepper button {
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+}

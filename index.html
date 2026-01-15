@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mascreen - Mosque Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header Section -->
+            <header class="dashboard-header">
+                <div class="mosque-info">
+                    <img id="mosque-logo-display" src="" alt="Mosque Logo" class="mosque-logo hidden">
+                    <div class="mosque-text">
+                        <h1 id="mosque-name-display">Masjid Al-Noor</h1>
+                        <p id="mosque-address-display" class="location-subtitle">Phoenix, AZ</p>
+                    </div>
+                </div>
+                <div class="time-display">
+                    <div id="clock" class="clock">00:00:00</div>
+                    <div id="date-gregorian" class="date-sub">Monday, January 1, 2026</div>
+                    <div id="date-hijri" class="date-hijri">1 Rajab 1447</div>
+                </div>
+            </header>
+
+            <!-- Prayer Times Table -->
+            <section class="prayer-section">
+                <div class="prayer-card active-prayer" id="next-prayer-card">
+                    <span class="label">Next Prayer</span>
+                    <h2 id="next-prayer-name">--</h2>
+                    <div class="countdown" id="countdown">--:--:--</div>
+                </div>
+
+                <div class="prayer-list" id="prayer-list">
+                    <!-- Javascript will populate this -->
+                </div>
+            </section>
+
+            <!-- Jummah & QR Section -->
+            <div class="bottom-grid">
+                <section class="jummah-card">
+                    <h3>Jummah Prayer</h3>
+                    <p id="jummah-date-display" class="jummah-date-text">Friday, January 16</p>
+                    <div class="jummah-time">
+                        <span id="jummah-time">1:30 PM</span>
+                        <span class="jummah-label">Khutbah</span>
+                    </div>
+                    <div class="khatib-info">
+                        <span>Khatib:</span>
+                        <strong id="khatib-name">Sheikh Ahmed</strong>
+                    </div>
+                </section>
+
+                <section class="hadith-card">
+                    <h3>Quote of the Day</h3>
+                    <div class="hadith-content">
+                        <p id="hadith-text">"Verily, with hardship comes ease."</p>
+                        <span id="hadith-source">- Surah Ash-Sharh (94:6)</span>
+                    </div>
+                </section>
+
+                <section class="qr-card">
+                    <h3>Donate</h3>
+                    <div class="qr-container">
+                        <div class="qr-item">
+                            <span class="qr-label">Zelle</span>
+                            <div id="qr-zelle" class="qr-placeholder small"></div>
+                        </div>
+                        <div class="qr-item">
+                            <span class="qr-label">CashApp</span>
+                            <div id="qr-cashapp" class="qr-placeholder small"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Sidebar / Ticker Area -->
+        <aside class="announcement-bar">
+            <div class="ticker-wrap">
+                <div class="ticker" id="announcement-ticker">
+                    <div class="ticker__item">Welcome to Masjid Al-Noor Dashboard.</div>
+                    <div class="ticker__item">Please silence your phones.</div>
+                    <div class="ticker__item">Jummah Khutbah begins at 1:30 PM.</div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Overlays -->
+
+    <!-- Silent Mode Overlay -->
+    <div id="silent-overlay" class="overlay silent-mode hidden">
+        <div class="silent-content">
+            <div class="silent-icon">🔕</div>
+            <h1>Please Silence Your Phones</h1>
+            <p>Prayer is about to begin</p>
+        </div>
+    </div>
+
+    <!-- Admin Button (Hidden trigger area) -->
+    <div id="admin-trigger" class="admin-trigger">⚙️</div>
+
+    <!-- Admin Overlay -->
+    <div id="admin-overlay" class="overlay admin-panel hidden">
+        <div class="admin-content">
+            <div class="admin-header">
+                <h2>Dashboard Settings</h2>
+                <button id="close-admin">✕</button>
+            </div>
+
+            <div id="login-form">
+                <input type="password" id="admin-pass" placeholder="Enter Password">
+                <button id="login-btn">Login</button>
+            </div>
+
+            <div id="admin-controls" class="hidden">
+                <div class="control-group">
+                    <label>Mosque Logo URL</label>
+                    <input type="text" id="edit-mosque-logo" placeholder="Image URL (e.g. https://...)">
+                </div>
+
+                <div class="control-group">
+                    <label>Mosque Name</label>
+                    <input type="text" id="edit-mosque-name" placeholder="e.g. Masjid Al-Noor">
+                </div>
+
+                <div class="control-group">
+                    <label>Mosque Address / Subtitle</label>
+                    <input type="text" id="edit-mosque-address" placeholder="e.g. Phoenix, AZ">
+                </div>
+
+                <div class="control-group">
+                    <label>Zelle QR URL</label>
+                    <input type="text" id="edit-qr-zelle" placeholder="Image URL">
+                </div>
+
+                <div class="control-group">
+                    <label>CashApp QR URL</label>
+                    <input type="text" id="edit-qr-cashapp" placeholder="Image URL">
+                </div>
+
+                <div class="control-group">
+                    <label>Hijri Adjustment</label>
+                    <div class="number-stepper">
+                        <button onclick="adjustHijri(-1)">-</button>
+                        <span id="hijri-offset-display">0</span>
+                        <button onclick="adjustHijri(1)">+</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Jummah Date</label>
+                    <input type="text" id="edit-jummah-date" placeholder="e.g. Friday, Jan 16">
+                </div>
+
+                <div class="control-group">
+                    <label>Jummah Time</label>
+                    <input type="text" id="edit-jummah-time" value="1:30 PM">
+                </div>
+
+                <div class="control-group">
+                    <label>Khatib Name</label>
+                    <input type="text" id="edit-khatib-name" value="Sheikh Ahmed">
+                </div>
+
+                <div class="control-group">
+                    <label>Quote / Hadith</label>
+                    <textarea id="edit-hadith-text" rows="3" placeholder="Enter text here..."></textarea>
+                </div>
+
+                <div class="control-group">
+                    <label>Quote Source</label>
+                    <input type="text" id="edit-hadith-source" placeholder="e.g. Bukhari or Surah Name">
+                </div>
+
+                <div class="control-group">
+                    <label>Announcements (use | to separate)</label>
+                    <textarea id="edit-announcements" rows="4"></textarea>
+                </div>
+
+                <div class="control-group">
+                    <label>Background Image URL</label>
+                    <input type="text" id="edit-bg-url" placeholder="https://example.com/image.jpg">
+                    <small style="display:block; margin-top:0.25rem; color:#666;">Leave empty for default theme</small>
+                </div>
+
+                <button id="save-settings" class="save-btn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
