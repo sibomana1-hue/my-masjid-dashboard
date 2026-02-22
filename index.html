@@ -44,17 +44,18 @@
                 </div>
             </section>
 
-            <!-- Jummah & QR Section -->
+            <!-- Mawaidha & QR Section -->
             <div class="bottom-grid">
                 <section class="jummah-card">
-                    <h3>Jummah Prayer</h3>
-                    <p id="jummah-date-display" class="jummah-date-text">Friday, January 16</p>
+                    <div class="muhadhara-header">
+                        <span class="muhadhara-badge">🌙 Ramadan</span>
+                        <h3>Mawaidha</h3>
+                    </div>
                     <div class="jummah-time">
-                        <span id="jummah-time">1:30 PM</span>
-                        <span class="jummah-label">Khutbah</span>
+                        <span id="jummah-time">8:00 PM</span>
                     </div>
                     <div class="khatib-info">
-                        <span>Khatib:</span>
+                        <span>Today's Muhadhir:</span>
                         <strong id="khatib-name">Sheikh Ahmed</strong>
                     </div>
                 </section>
@@ -158,18 +159,20 @@
                 </div>
 
                 <div class="control-group">
-                    <label>Jummah Date</label>
-                    <input type="text" id="edit-jummah-date" placeholder="e.g. Friday, Jan 16">
+                    <label>Mawaidha Time (Daily)</label>
+                    <input type="text" id="edit-jummah-time" placeholder="e.g. 8:00 PM">
                 </div>
 
                 <div class="control-group">
-                    <label>Jummah Time</label>
-                    <input type="text" id="edit-jummah-time" value="1:30 PM">
+                    <label>Today's Muhadhir (override)</label>
+                    <input type="text" id="edit-khatib-name" placeholder="e.g. Sheikh Ahmed">
                 </div>
 
                 <div class="control-group">
-                    <label>Khatib Name</label>
-                    <input type="text" id="edit-khatib-name" value="Sheikh Ahmed">
+                    <label>📅 Muhadhir Schedule (one per line)</label>
+                    <textarea id="edit-muhadhir-schedule" rows="10"
+                        placeholder="1. Sheikh Ahmad&#10;2. Sheikh Ali&#10;3. Sheikh Hassan"></textarea>
+                    <small style="display:block;margin-top:0.3rem;color:#666;">Format: RamadanDay. Name — auto-shows today's Muhadhir</small>
                 </div>
 
                 <div class="control-group">
